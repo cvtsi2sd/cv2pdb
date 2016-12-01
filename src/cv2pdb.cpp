@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <direct.h>
+#include <algorithm>
 
 #define REMOVE_LF_DERIVED  1  // types wrong by DMD
 #define PRINT_INTERFACEVERSON 0
@@ -340,7 +341,7 @@ static int copy_p2dsym(unsigned char* dp, int& dpos, const unsigned char* p, int
 {
 	const BYTE* q = p + pos;
 	int plen = pstrlen(q);
-	int len = min(plen, maxdlen - dpos);
+	int len = std::min(plen, maxdlen - dpos);
 	memcpy(dp + dpos, q, len);
 	dp[dpos + len] = 0;
 	dpos += len + 1;
@@ -1500,9 +1501,9 @@ const char* CV2PDB::appendAssocArray(int keyType, int elemType)
 	char keyname[kMaxNameLen];
 	char elemname[kMaxNameLen];
 	if(!nameOfType(keyType, keyname, sizeof(keyname)))
-		return false;
+		return nullptr;
 	if(!nameOfType(elemType, elemname, sizeof(elemname)))
-		return false;
+		return nullptr;
 
 	sprintf(name, "internal@aaA<%s,%s>", keyname, elemname);
 

@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(cv2pdb)
 
 if(NOT MSVC)
-	message(FATAL_ERROR "MSVC only!")
+    add_definitions(-std=c++0x)
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DUNICODE /D_UNICODE /D_CRT_SECURE_NO_WARNINGS")
+add_definitions(-DUNICODE -D_UNICODE -D_CRT_SECURE_NO_WARNINGS -DNOMINMAX)
 
 set(cv2pdb_SOURCES
 	src/cv2pdb.cpp

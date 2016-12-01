@@ -9,6 +9,8 @@
 
 #include <stdio.h>
 
+struct _GUID;
+
 namespace mspdb
 {
 
@@ -36,22 +38,15 @@ struct TPI;
 struct IPI;
 struct NameMap;
 struct EnumNameMap;
-
-#define MRECmp MRECmp2
-#define PDBCommon PDB
-#define SrcCommon Src
-#define ModCommon Mod
-
-#define MREUtil2 MREUtil
-#define MREFile2 MREFile
-#define MREBag2 MREBag
-#define Mod2 Mod
-#define GSI2 GSI
-#define TPI2 TPI
-#define NameMap2 NameMap
-#define EnumNameMap2 EnumNameMap
-
 struct DBI;
+
+enum EnumType : int;
+enum DEPON : int;
+enum YNM : int;
+enum TrgType : int;
+enum PCC : int;
+enum DBGTYPE : int;
+enum DOVC : int;
 
 extern int vsVersion;
 
@@ -61,182 +56,181 @@ extern int vsVersion;
 */
 
 struct MREUtil {
-public: virtual int MREUtil::FRelease(void);
-public: virtual void MREUtil::EnumSrcFiles(int (__stdcall*)(struct MREUtil *,struct EnumFile &,enum EnumType),unsigned short const *,void *);
-public: virtual void MREUtil::EnumDepFiles(struct EnumFile &,int (__stdcall*)(struct MREUtil *,struct EnumFile &,enum EnumType));
-public: virtual void MREUtil::EnumAllFiles(int (__stdcall*)(struct MREUtil *,struct EnumFile &),unsigned short const *,void *);
-public: virtual void MREUtil::Enumstructes(int (__stdcall*)(struct MREUtil *,struct Enumstruct &),unsigned short const *,void *);
-public: virtual void MREUtil::SummaryStats(struct MreStats &);
+	virtual int FRelease(void);
+	virtual void EnumSrcFiles(int (__stdcall*)(struct MREUtil *,struct EnumFile &,enum EnumType),unsigned short const *,void *);
+	virtual void EnumDepFiles(struct EnumFile &,int (__stdcall*)(struct MREUtil *,struct EnumFile &,enum EnumType));
+	virtual void EnumAllFiles(int (__stdcall*)(struct MREUtil *,struct EnumFile &),unsigned short const *,void *);
+	virtual void Enumstructes(int (__stdcall*)(struct MREUtil *,struct Enumstruct &),unsigned short const *,void *);
+	virtual void SummaryStats(struct MreStats &);
 };
 
 struct MREFile {
-public: virtual int MREFile::FOpenBag(struct MREBag * *,unsigned long);
-public: virtual int MREFile::FnoteEndInclude(unsigned long);
-public: virtual int MREFile::FnotestructMod(unsigned long,unsigned long);
-public: virtual int MREFile::FnoteInlineMethodMod(unsigned long,char const *,unsigned long);
-public: virtual int MREFile::FnoteLineDelta(unsigned long,int);
-public: virtual void MREFile::EnumerateChangedstructes(int (__cdecl*)(unsigned long,struct MREFile *,int (MREFile::*)(unsigned long,unsigned long)));
-public: virtual int MREFile::FnotestructTI(unsigned long,unsigned long);
-public: virtual int MREFile::FIsBoring(void);
-public: virtual int MREFile::FnotePchCreateUse(unsigned short const *,unsigned short const *);
+	virtual int FOpenBag(struct MREBag * *,unsigned long);
+	virtual int FnoteEndInclude(unsigned long);
+	virtual int FnotestructMod(unsigned long,unsigned long);
+	virtual int FnoteInlineMethodMod(unsigned long,char const *,unsigned long);
+	virtual int FnoteLineDelta(unsigned long,int);
+	virtual void EnumerateChangedstructes(int (__cdecl*)(unsigned long,struct MREFile *,int (*)(unsigned long,unsigned long)));
+	virtual int FnotestructTI(unsigned long,unsigned long);
+	virtual int FIsBoring(void);
+	virtual int FnotePchCreateUse(unsigned short const *,unsigned short const *);
 };
 
 struct MREBag {
-public: virtual int MREBag::FAddDep(unsigned long,unsigned long,char const *,enum DEPON,unsigned long);
-public: virtual int MREBag::FClose(void);
+	virtual int FAddDep(unsigned long,unsigned long,char const *,enum DEPON,unsigned long);
+	virtual int FClose(void);
 };
 
 struct BufferDefaultAllocator {
-public: virtual unsigned char * BufferDefaultAllocator::Alloc(long);
-public: virtual unsigned char * BufferDefaultAllocator::AllocZeroed(long);
-public: virtual void BufferDefaultAllocator::DeAlloc(unsigned char *);
+	virtual unsigned char * Alloc(long);
+	virtual unsigned char * AllocZeroed(long);
+	virtual void DeAlloc(unsigned char *);
 };
 
-
 struct EnumSC {
-public: virtual int EnumSC::next(void);
-public: virtual void EnumSC::get(unsigned short *,unsigned short *,long *,long *,unsigned long *);
-public: virtual void EnumSC::getCrcs(unsigned long *,unsigned long *);
-public: virtual bool EnumSC::fUpdate(long,long);
-public: virtual int EnumSC::prev(void);
-public: virtual int EnumSC::clone(struct EnumContrib * *);
-public: virtual int EnumSC::locate(long,long);
+	virtual int next(void);
+	virtual void get(unsigned short *,unsigned short *,long *,long *,unsigned long *);
+	virtual void getCrcs(unsigned long *,unsigned long *);
+	virtual bool fUpdate(long,long);
+	virtual int prev(void);
+	virtual int clone(struct EnumContrib * *);
+	virtual int locate(long,long);
 };
 
 struct Stream {
-public: virtual long Stream::QueryCb(void);
-public: virtual int Stream::Read(long,void *,long *);
-public: virtual int Stream::Write(long,void *,long);
-public: virtual int Stream::Replace(void *,long);
-public: virtual int Stream::Append(void *,long);
-public: virtual int Stream::Delete(void);
-public: virtual int Stream::Release(void);
-public: virtual int Stream::Read2(long,void *,long);
-public: virtual int Stream::Truncate(long);
+	virtual long QueryCb(void);
+	virtual int Read(long,void *,long *);
+	virtual int Write(long,void *,long);
+	virtual int Replace(void *,long);
+	virtual int Append(void *,long);
+	virtual int Delete(void);
+	virtual int Release(void);
+	virtual int Read2(long,void *,long);
+	virtual int Truncate(long);
 };
 
 struct EnumThunk {
-public: virtual void EnumThunk::release(void);
-public: virtual void EnumThunk::reset(void);
-public: virtual int EnumThunk::next(void);
-public: virtual void EnumThunk::get(unsigned short *,long *,long *);
+	virtual void release(void);
+	virtual void reset(void);
+	virtual int next(void);
+	virtual void get(unsigned short *,long *,long *);
 };
 
 struct EnumSyms {
-public: virtual void EnumSyms::release(void);
-public: virtual void EnumSyms::reset(void);
-public: virtual int EnumSyms::next(void);
-public: virtual void EnumSyms::get(unsigned char * *);
-public: virtual int EnumSyms::prev(void);
-public: virtual int EnumSyms::clone(struct EnumSyms * *);
-public: virtual int EnumSyms::locate(long,long);
+	virtual void release(void);
+	virtual void reset(void);
+	virtual int next(void);
+	virtual void get(unsigned char * *);
+	virtual int prev(void);
+	virtual int clone(struct EnumSyms * *);
+	virtual int locate(long,long);
 };
 
 struct EnumLines {
-public: virtual void EnumLines::release(void);
-public: virtual void EnumLines::reset(void);
-public: virtual int EnumLines::next(void);
-public: virtual bool EnumLines::getLines(unsigned long *,unsigned long *,unsigned short *,unsigned long *,unsigned long *,struct CV_Line_t *);
-public: virtual bool EnumLines::getLinesColumns(unsigned long *,unsigned long *,unsigned short *,unsigned long *,unsigned long *,struct CV_Line_t *,struct CV_Column_t *);
-public: virtual bool EnumLines::clone(struct EnumLines * *);
+	virtual void release(void);
+	virtual void reset(void);
+	virtual int next(void);
+	virtual bool getLines(unsigned long *,unsigned long *,unsigned short *,unsigned long *,unsigned long *,struct CV_Line_t *);
+	virtual bool getLinesColumns(unsigned long *,unsigned long *,unsigned short *,unsigned long *,unsigned long *,struct CV_Line_t *,struct CV_Column_t *);
+	virtual bool clone(struct EnumLines * *);
 };
 
 struct Dbg {
-public: virtual int Dbg::Close(void);
-public: virtual long Dbg::QuerySize(void);
-public: virtual void Dbg::Reset(void);
-public: virtual int Dbg::Skip(unsigned long);
-public: virtual int Dbg::QueryNext(unsigned long,void *);
-public: virtual int Dbg::Find(void *);
-public: virtual int Dbg::Clear(void);
-public: virtual int Dbg::Append(unsigned long,void const *);
-public: virtual int Dbg::ReplaceNext(unsigned long,void const *);
-public: virtual int Dbg::Clone(struct Dbg * *);
-public: virtual long Dbg::QueryElementSize(void);
+	virtual int Close(void);
+	virtual long QuerySize(void);
+	virtual void Reset(void);
+	virtual int Skip(unsigned long);
+	virtual int QueryNext(unsigned long,void *);
+	virtual int Find(void *);
+	virtual int Clear(void);
+	virtual int Append(unsigned long,void const *);
+	virtual int ReplaceNext(unsigned long,void const *);
+	virtual int Clone(struct Dbg * *);
+	virtual long QueryElementSize(void);
 };
 
 struct EnumSrc {
-public: virtual void EnumSrc::release(void);
-public: virtual void EnumSrc::reset(void);
-public: virtual int EnumSrc::next(void);
-public: virtual void EnumSrc::get(struct SrcHeaderOut const * *);
+	virtual void release(void);
+	virtual void reset(void);
+	virtual int next(void);
+	virtual void get(struct SrcHeaderOut const * *);
 };
 
 struct MREDrv {
-public: virtual int MREDrv::FRelease(void);
-public: virtual int MREDrv::FRefreshFileSysInfo(void);
-public: virtual int MREDrv::FSuccessfulCompile(int,unsigned short const *,unsigned short const *);
-public: virtual enum YNM MREDrv::YnmFileOutOfDate(struct SRCTARG &);
-public: virtual int MREDrv::FFilesOutOfDate(struct CAList *);
-public: virtual int MREDrv::FUpdateTargetFile(unsigned short const *,enum TrgType);
-public: virtual void MREDrv::OneTimeInit(void);
+	virtual int FRelease(void);
+	virtual int FRefreshFileSysInfo(void);
+	virtual int FSuccessfulCompile(int,unsigned short const *,unsigned short const *);
+	virtual enum YNM YnmFileOutOfDate(struct SRCTARG &);
+	virtual int FFilesOutOfDate(struct CAList *);
+	virtual int FUpdateTargetFile(unsigned short const *,enum TrgType);
+	virtual void OneTimeInit(void);
 };
 
 struct MREngine {
-public: virtual int MREngine::FDelete(void);
-public: virtual int MREngine::FClose(int);
-public: virtual void MREngine::QueryPdbApi(struct PDB * &,struct NameMap * &);
-public: virtual void MREngine::_Reserved_was_QueryMreLog(void);
-public: virtual void MREngine::QueryMreDrv(struct MREDrv * &);
-public: virtual void MREngine::QueryMreCmp(struct MRECmp * &,struct TPI *);
-public: virtual void MREngine::QueryMreUtil(struct MREUtil * &);
-public: virtual int MREngine::FCommit(void);
+	virtual int FDelete(void);
+	virtual int FClose(int);
+	virtual void QueryPdbApi(struct PDB * &,struct NameMap * &);
+	virtual void _Reserved_was_QueryMreLog(void);
+	virtual void QueryMreDrv(struct MREDrv * &);
+	virtual void QueryMreCmp(struct MRECmp2 * &,struct TPI *);
+	virtual void QueryMreUtil(struct MREUtil * &);
+	virtual int FCommit(void);
 };
 
 struct MRECmp2 {
-public: virtual int MRECmp2::FRelease(void);
-public: virtual int MRECmp2::FOpenCompiland(struct MREFile * *,unsigned short const *,unsigned short const *);
-public: virtual int MRECmp2::FCloseCompiland(struct MREFile *,int);
-public: virtual int MRECmp2::FPushFile(struct MREFile * *,unsigned short const *,void *);
-public: virtual struct MREFile * MRECmp2::PmrefilePopFile(void);
-public: virtual int MRECmp::FStoreDepData(struct DepData *);
-public: virtual int MRECmp::FRestoreDepData(struct DepData *);
-public: virtual void MRECmp::structIsBoring(unsigned long);
+	virtual int FRelease(void);
+	virtual int FOpenCompiland(struct MREFile * *,unsigned short const *,unsigned short const *);
+	virtual int FCloseCompiland(struct MREFile *,int);
+	virtual int FPushFile(struct MREFile * *,unsigned short const *,void *);
+	virtual struct MREFile * PmrefilePopFile(void);
+	virtual int FStoreDepData(struct DepData *);
+	virtual int FRestoreDepData(struct DepData *);
+	virtual void structIsBoring(unsigned long);
 };
 
-//public: virtual void * Pool<16384>::AllocBytes(unsigned int);
-//public: virtual void EnumSyms::get(unsigned char * *);
-//public: virtual void * Pool<65536>::AllocBytes(unsigned int);
-//public: virtual void EnumSyms::get(unsigned char * *);
+//    virtual void * Pool<16384>::AllocBytes(unsigned int);
+//    virtual void EnumSyms::get(unsigned char * *);
+//    virtual void * Pool<65536>::AllocBytes(unsigned int);
+//    virtual void EnumSyms::get(unsigned char * *);
 
 typedef int __cdecl fnPDBOpen2W(const wchar_t *path,char const *mode,long *p,
 				wchar_t *ext,unsigned int flags,struct PDB **pPDB);
 
 struct PDB_part1 {
-public: virtual unsigned long QueryInterfaceVersion(void);
-public: virtual unsigned long QueryImplementationVersion(void);
-public: virtual long QueryLastError(char * const);
-public: virtual char * QueryPDBName(char * const);
-public: virtual unsigned long QuerySignature(void);
-public: virtual unsigned long QueryAge(void);
-public: virtual int CreateDBI(char const *,struct DBI * *);
-public: virtual int OpenDBI(char const *,char const *,struct DBI * *);
-public: virtual int OpenTpi(char const *,struct TPI * *);
+	virtual unsigned long QueryInterfaceVersion(void);
+	virtual unsigned long QueryImplementationVersion(void);
+	virtual long QueryLastError(char * const);
+	virtual char * QueryPDBName(char * const);
+	virtual unsigned long QuerySignature(void);
+	virtual unsigned long QueryAge(void);
+	virtual int CreateDBI(char const *,struct DBI * *);
+	virtual int OpenDBI(char const *,char const *,struct DBI * *);
+	virtual int OpenTpi(char const *,struct TPI * *);
 };
 
 struct PDB_part_vs11 : public PDB_part1 {
-public: virtual int OpenIpi(char const *,struct IPI * *); // VS11
+	virtual int OpenIpi(char const *,struct IPI * *); // VS11
 };
 
-template<class BASE>
+template<typename BASE>
 struct PDB_part2 : public BASE {
-public: virtual int Commit(void);
-public: virtual int Close(void);
-public: virtual int OpenStreamW(unsigned short const *,struct Stream * *);
-public: virtual int GetEnumStreamNameMap(struct Enum * *);
-public: virtual int GetRawBytes(int (__cdecl*)(void const *,long));
-public: virtual unsigned long QueryPdbImplementationVersion(void);
-public: virtual int OpenDBIEx(char const *,char const *,struct DBI * *,int (__stdcall*)(struct _tagSEARCHDEBUGINFO *));
-public: virtual int CopyTo(char const *,unsigned long,unsigned long);
-public: virtual int OpenSrc(struct Src * *);
-public: virtual long QueryLastErrorExW(unsigned short *,unsigned int);
-public: virtual unsigned short * QueryPDBNameExW(unsigned short *,unsigned int);
-public: virtual int QuerySignature2(struct _GUID *);
-public: virtual int CopyToW(unsigned short const *,unsigned long,unsigned long);
-public: virtual int fIsSZPDB(void)const ;
-public: virtual int containsW(unsigned short const *,unsigned long *);
-public: virtual int CopyToW2(unsigned short const *,unsigned long,int (__cdecl*(__cdecl*)(void *,enum PCC))(void),void *);
-public: virtual int OpenStreamEx(char const *,char const *,struct Stream * *);
+	virtual int Commit(void);
+	virtual int Close(void);
+	virtual int OpenStreamW(unsigned short const *,struct Stream * *);
+	virtual int GetEnumStreamNameMap(struct Enum * *);
+	virtual int GetRawBytes(int (__cdecl*)(void const *,long));
+	virtual unsigned long QueryPdbImplementationVersion(void);
+	virtual int OpenDBIEx(char const *,char const *,struct DBI * *,int (__stdcall*)(struct _tagSEARCHDEBUGINFO *));
+	virtual int CopyTo(char const *,unsigned long,unsigned long);
+	virtual int OpenSrc(struct Src * *);
+	virtual long QueryLastErrorExW(unsigned short *,unsigned int);
+	virtual unsigned short * QueryPDBNameExW(unsigned short *,unsigned int);
+	virtual int QuerySignature2(struct _GUID *);
+	virtual int CopyToW(unsigned short const *,unsigned long,unsigned long);
+	virtual int fIsSZPDB(void)const ;
+	virtual int containsW(unsigned short const *,unsigned long *);
+	virtual int CopyToW2(unsigned short const *,unsigned long,int (__cdecl*(__cdecl*)(void *,enum PCC))(void),void *);
+	virtual int OpenStreamEx(char const *,char const *,struct Stream * *);
 };
 
 struct PDB_VS10 : public PDB_part2<PDB_part1> {};
@@ -246,7 +240,6 @@ struct PDB
 {
 	PDB_VS10 vs10;
 
-public: 
 	static int __cdecl Open2W(unsigned short const *path,char const *mode,long *p,unsigned short *ext,unsigned int flags,struct PDB **pPDB);
 
 	unsigned long QueryAge() { return vs10.QueryAge(); }
@@ -275,16 +268,16 @@ public:
 };
 
 struct Src {
-public: virtual bool Src::Close(void);
-public: virtual bool SrcCommon::Add(struct SrcHeader const *,void const *);
-public: virtual bool Src::Remove(char const *);
-public: virtual bool SrcCommon::QueryByName(char const *,struct SrcHeaderOut *)const ;
-public: virtual bool Src::GetData(struct SrcHeaderOut const *,void *)const ;
-public: virtual bool Src::GetEnum(struct EnumSrc * *)const ;
-public: virtual bool Src::GetHeaderBlock(struct SrcHeaderBlock &)const ;
-public: virtual bool Src::RemoveW(unsigned short *);
-public: virtual bool Src::QueryByNameW(unsigned short *,struct SrcHeaderOut *)const ;
-public: virtual bool Src::AddW(struct SrcHeaderW const *,void const *);
+	virtual bool Close(void);
+	virtual bool Add(struct SrcHeader const *,void const *);
+	virtual bool Remove(char const *);
+	virtual bool QueryByName(char const *,struct SrcHeaderOut *)const ;
+	virtual bool GetData(struct SrcHeaderOut const *,void *)const ;
+	virtual bool GetEnum(struct EnumSrc * *)const ;
+	virtual bool GetHeaderBlock(struct SrcHeaderBlock &)const ;
+	virtual bool RemoveW(unsigned short *);
+	virtual bool QueryByNameW(unsigned short *,struct SrcHeaderOut *)const ;
+	virtual bool AddW(struct SrcHeaderW const *,void const *);
 };
 
 #include "pshpack1.h"
@@ -325,15 +318,15 @@ struct TypeChunk
 	unsigned short len;
 	unsigned short type;
 
-	union
-	{
+	/*union
+	{*/
 		struct _refpdb // type 0x1515
 		{
 			unsigned int md5[4];
 			unsigned int unknown;
 			unsigned pdbname[1];
 		} refpdb;
-	};
+	/*};*/
 };
 
 struct TypeData
@@ -345,113 +338,113 @@ struct TypeData
 #include "poppack.h"
 
 struct Mod {
-public: virtual unsigned long Mod::QueryInterfaceVersion(void);
-public: virtual unsigned long Mod::QueryImplementationVersion(void);
-public: virtual int Mod::AddTypes(unsigned char *pTypeData,long cbTypeData);
-public: virtual int Mod::AddSymbols(unsigned char *pSymbolData,long cbSymbolData);
-public: virtual int Mod2::AddPublic(char const *,unsigned short,long); // forwards to AddPublic2(...,0)
-public: virtual int ModCommon::AddLines(char const *fname,unsigned short sec,long off,long size,long off2,unsigned short firstline,unsigned char *pLineInfo,long cbLineInfo); // forwards to AddLinesW
-public: virtual int Mod2::AddSecContrib(unsigned short sec,long off,long size,unsigned long secflags); // forwards to Mod2::AddSecContribEx(..., 0, 0)
-public: virtual int ModCommon::QueryCBName(long *);
-public: virtual int ModCommon::QueryName(char * const,long *);
-public: virtual int Mod::QuerySymbols(unsigned char *,long *);
-public: virtual int Mod::QueryLines(unsigned char *,long *);
-public: virtual int Mod2::SetPvClient(void *);
-public: virtual int Mod2::GetPvClient(void * *);
-public: virtual int Mod2::QueryFirstCodeSecContrib(unsigned short *,long *,long *,unsigned long *);
-public: virtual int Mod2::QueryImod(unsigned short *);
-public: virtual int Mod2::QueryDBI(struct DBI * *);
-public: virtual int Mod2::Close(void);
-public: virtual int ModCommon::QueryCBFile(long *);
-public: virtual int ModCommon::QueryFile(char * const,long *);
-public: virtual int Mod::QueryTpi(struct TPI * *);
-public: virtual int Mod2::AddSecContribEx(unsigned short sec,long off,long size,unsigned long secflags,unsigned long crc/*???*/,unsigned long);
-public: virtual int Mod::QueryItsm(unsigned short *);
-public: virtual int ModCommon::QuerySrcFile(char * const,long *);
-public: virtual int Mod::QuerySupportsEC(void);
-public: virtual int ModCommon::QueryPdbFile(char * const,long *);
-public: virtual int Mod::ReplaceLines(unsigned char *,long);
-public: virtual bool Mod::GetEnumLines(struct EnumLines * *);
-public: virtual bool Mod::QueryLineFlags(unsigned long *);
-public: virtual bool Mod::QueryFileNameInfo(unsigned long,unsigned short *,unsigned long *,unsigned long *,unsigned char *,unsigned long *);
-public: virtual int Mod::AddPublicW(unsigned short const *,unsigned short,long,unsigned long);
-public: virtual int Mod::AddLinesW(unsigned short const *fname,unsigned short sec,long off,long size,long off2,unsigned long firstline,unsigned char *plineInfo,long cbLineInfo);
-public: virtual int Mod::QueryNameW(unsigned short * const,long *);
-public: virtual int Mod::QueryFileW(unsigned short * const,long *);
-public: virtual int Mod::QuerySrcFileW(unsigned short * const,long *);
-public: virtual int Mod::QueryPdbFileW(unsigned short * const,long *);
-public: virtual int Mod2::AddPublic2(char const *name,unsigned short sec,long off,unsigned long type);
-public: virtual int Mod::InsertLines(unsigned char *,long);
-public: virtual int Mod::QueryLines2(long,unsigned char *,long *);
+	virtual unsigned long QueryInterfaceVersion(void);
+	virtual unsigned long QueryImplementationVersion(void);
+	virtual int AddTypes(unsigned char *pTypeData,long cbTypeData);
+	virtual int AddSymbols(unsigned char *pSymbolData,long cbSymbolData);
+	virtual int AddPublic(char const *,unsigned short,long); // forwards to AddPublic2(...,0)
+	virtual int AddLines(char const *fname,unsigned short sec,long off,long size,long off2,unsigned short firstline,unsigned char *pLineInfo,long cbLineInfo); // forwards to AddLinesW
+	virtual int AddSecContrib(unsigned short sec,long off,long size,unsigned long secflags); // forwards to AddSecContribEx(..., 0, 0)
+	virtual int QueryCBName(long *);
+	virtual int QueryName(char * const,long *);
+	virtual int QuerySymbols(unsigned char *,long *);
+	virtual int QueryLines(unsigned char *,long *);
+	virtual int SetPvClient(void *);
+	virtual int GetPvClient(void * *);
+	virtual int QueryFirstCodeSecContrib(unsigned short *,long *,long *,unsigned long *);
+	virtual int QueryImod(unsigned short *);
+	virtual int QueryDBI(struct DBI * *);
+	virtual int Close(void);
+	virtual int QueryCBFile(long *);
+	virtual int QueryFile(char * const,long *);
+	virtual int QueryTpi(struct TPI * *);
+	virtual int AddSecContribEx(unsigned short sec,long off,long size,unsigned long secflags,unsigned long crc/*???*/,unsigned long);
+	virtual int QueryItsm(unsigned short *);
+	virtual int QuerySrcFile(char * const,long *);
+	virtual int QuerySupportsEC(void);
+	virtual int QueryPdbFile(char * const,long *);
+	virtual int ReplaceLines(unsigned char *,long);
+	virtual bool GetEnumLines(struct EnumLines * *);
+	virtual bool QueryLineFlags(unsigned long *);
+	virtual bool QueryFileNameInfo(unsigned long,unsigned short *,unsigned long *,unsigned long *,unsigned char *,unsigned long *);
+	virtual int AddPublicW(unsigned short const *,unsigned short,long,unsigned long);
+	virtual int AddLinesW(unsigned short const *fname,unsigned short sec,long off,long size,long off2,unsigned long firstline,unsigned char *plineInfo,long cbLineInfo);
+	virtual int QueryNameW(unsigned short * const,long *);
+	virtual int QueryFileW(unsigned short * const,long *);
+	virtual int QuerySrcFileW(unsigned short * const,long *);
+	virtual int QueryPdbFileW(unsigned short * const,long *);
+	virtual int AddPublic2(char const *name,unsigned short sec,long off,unsigned long type);
+	virtual int InsertLines(unsigned char *,long);
+	virtual int QueryLines2(long,unsigned char *,long *);
 };
 
 
 struct DBI_part1 {
-public: virtual unsigned long QueryImplementationVersion(void);
-public: virtual unsigned long QueryInterfaceVersion(void);
-public: virtual int OpenMod(char const *objName,char const *libName,struct Mod * *);
-public: virtual int DeleteMod(char const *);
-public: virtual int QueryNextMod(struct Mod *,struct Mod * *);
-public: virtual int OpenGlobals(struct GSI * *);
-public: virtual int OpenPublics(struct GSI * *);
-public: virtual int AddSec(unsigned short sec,unsigned short flags,long offset,long cbseg);
-public: virtual int QueryModFromAddr(unsigned short,long,struct Mod * *,unsigned short *,long *,long *);
-public: virtual int QuerySecMap(unsigned char *,long *);
-public: virtual int QueryFileInfo(unsigned char *,long *);
-public: virtual void DumpMods(void);
-public: virtual void DumpSecContribs(void);
-public: virtual void DumpSecMap(void);
-public: virtual int Close(void);
-public: virtual int AddThunkMap(long *,unsigned int,long,struct SO *,unsigned int,unsigned short,long);
-public: virtual int AddPublic(char const *,unsigned short,long);
-public: virtual int getEnumContrib(struct Enum * *);
-public: virtual int QueryTypeServer(unsigned char,struct TPI * *);
-public: virtual int QueryItsmForTi(unsigned long,unsigned char *);
-public: virtual int QueryNextItsm(unsigned char,unsigned char *);
-public: virtual int reinitialize(void); // returns 0 (QueryLazyTypes in 10.0)
-public: virtual int SetLazyTypes(int);
-public: virtual int FindTypeServers(long *,char *);
-public: virtual void noop(void); // noop (_Reserved_was_QueryMreLog in 10.0)
-public: virtual int OpenDbg(enum DBGTYPE,struct Dbg * *);
-public: virtual int QueryDbgTypes(enum DBGTYPE *,long *);
-public: virtual int QueryAddrForSec(unsigned short *,long *,unsigned short,long,unsigned long,unsigned long);
+	virtual unsigned long QueryImplementationVersion(void);
+	virtual unsigned long QueryInterfaceVersion(void);
+	virtual int OpenMod(char const *objName,char const *libName,struct Mod * *);
+	virtual int DeleteMod(char const *);
+	virtual int QueryNextMod(struct Mod *,struct Mod * *);
+	virtual int OpenGlobals(struct GSI * *);
+	virtual int OpenPublics(struct GSI * *);
+	virtual int AddSec(unsigned short sec,unsigned short flags,long offset,long cbseg);
+	virtual int QueryModFromAddr(unsigned short,long,struct Mod * *,unsigned short *,long *,long *);
+	virtual int QuerySecMap(unsigned char *,long *);
+	virtual int QueryFileInfo(unsigned char *,long *);
+	virtual void DumpMods(void);
+	virtual void DumpSecContribs(void);
+	virtual void DumpSecMap(void);
+	virtual int Close(void);
+	virtual int AddThunkMap(long *,unsigned int,long,struct SO *,unsigned int,unsigned short,long);
+	virtual int AddPublic(char const *,unsigned short,long);
+	virtual int getEnumContrib(struct Enum * *);
+	virtual int QueryTypeServer(unsigned char,struct TPI * *);
+	virtual int QueryItsmForTi(unsigned long,unsigned char *);
+	virtual int QueryNextItsm(unsigned char,unsigned char *);
+	virtual int reinitialize(void); // returns 0 (QueryLazyTypes in 10.0)
+	virtual int SetLazyTypes(int);
+	virtual int FindTypeServers(long *,char *);
+	virtual void noop(void); // noop (_Reserved_was_QueryMreLog in 10.0)
+	virtual int OpenDbg(enum DBGTYPE,struct Dbg * *);
+	virtual int QueryDbgTypes(enum DBGTYPE *,long *);
+	virtual int QueryAddrForSec(unsigned short *,long *,unsigned short,long,unsigned long,unsigned long);
 };
 struct DBI_part2 : public DBI_part1 {
 // in mspdb100.dll:
-public: virtual int QueryAddrForSecEx(unsigned short *,long *,unsigned short,long,unsigned long,unsigned long);
+	virtual int QueryAddrForSecEx(unsigned short *,long *,unsigned short,long,unsigned long,unsigned long);
 };
 
-template<class BASE> 
+template<typename BASE> 
 struct DBI_BASE : public BASE {
-public: virtual int QuerySupportsEC(void);
-public: virtual int QueryPdb(struct PDB * *);
-public: virtual int AddLinkInfo(struct LinkInfo *);
-public: virtual int QueryLinkInfo(struct LinkInfo *,long *);
-public: virtual unsigned long QueryAge(void)const ;
-public: virtual int reinitialize2(void);  // returns 0 (QueryLazyTypes in 10.0)
-public: virtual void FlushTypeServers(void);
-public: virtual int QueryTypeServerByPdb(char const *,unsigned char *);
-public: virtual int OpenModW(unsigned short const *objName,unsigned short const *libName,struct Mod * *);
-public: virtual int DeleteModW(unsigned short const *);
-public: virtual int AddPublicW(unsigned short const *name,unsigned short sec,long off,unsigned long type);
-public: virtual int QueryTypeServerByPdbW(unsigned short const *,unsigned char *);
-public: virtual int AddLinkInfoW(struct LinkInfoW *);
-public: virtual int AddPublic2(char const *name,unsigned short sec,long off,unsigned long type);
-public: virtual unsigned short QueryMachineType(void)const ;
-public: virtual void SetMachineType(unsigned short);
-public: virtual void RemoveDataForRva(unsigned long,unsigned long);
-public: virtual int FStripped(void);
-public: virtual int QueryModFromAddr2(unsigned short,long,struct Mod * *,unsigned short *,long *,long *,unsigned long *);
-public: virtual int QueryNoOfMods(long *);
-public: virtual int QueryMods(struct Mod * *,long);
-public: virtual int QueryImodFromAddr(unsigned short,long,unsigned short *,unsigned short *,long *,long *,unsigned long *);
-public: virtual int OpenModFromImod(unsigned short,struct Mod * *);
-public: virtual int QueryHeader2(long,unsigned char *,long *);
-public: virtual int FAddSourceMappingItem(unsigned short const *,unsigned short const *,unsigned long);
-public: virtual int FSetPfnNotePdbUsed(void *,void (__cdecl*)(void *,unsigned short const *,int,int));
-public: virtual int FCTypes(void);
-public: virtual int QueryFileInfo2(unsigned char *,long *);
-public: virtual int FSetPfnQueryCallback(void *,int (__cdecl*(__cdecl*)(void *,enum DOVC))(void));
+	virtual int QuerySupportsEC(void);
+	virtual int QueryPdb(struct PDB * *);
+	virtual int AddLinkInfo(struct LinkInfo *);
+	virtual int QueryLinkInfo(struct LinkInfo *,long *);
+	virtual unsigned long QueryAge(void)const ;
+	virtual int reinitialize2(void);  // returns 0 (QueryLazyTypes in 10.0)
+	virtual void FlushTypeServers(void);
+	virtual int QueryTypeServerByPdb(char const *,unsigned char *);
+	virtual int OpenModW(unsigned short const *objName,unsigned short const *libName,struct Mod * *);
+	virtual int DeleteModW(unsigned short const *);
+	virtual int AddPublicW(unsigned short const *name,unsigned short sec,long off,unsigned long type);
+	virtual int QueryTypeServerByPdbW(unsigned short const *,unsigned char *);
+	virtual int AddLinkInfoW(struct LinkInfoW *);
+	virtual int AddPublic2(char const *name,unsigned short sec,long off,unsigned long type);
+	virtual unsigned short QueryMachineType(void)const ;
+	virtual void SetMachineType(unsigned short);
+	virtual void RemoveDataForRva(unsigned long,unsigned long);
+	virtual int FStripped(void);
+	virtual int QueryModFromAddr2(unsigned short,long,struct Mod * *,unsigned short *,long *,long *,unsigned long *);
+	virtual int QueryNoOfMods(long *);
+	virtual int QueryMods(struct Mod * *,long);
+	virtual int QueryImodFromAddr(unsigned short,long,unsigned short *,unsigned short *,long *,long *,unsigned long *);
+	virtual int OpenModFromImod(unsigned short,struct Mod * *);
+	virtual int QueryHeader2(long,unsigned char *,long *);
+	virtual int FAddSourceMappingItem(unsigned short const *,unsigned short const *,unsigned long);
+	virtual int FSetPfnNotePdbUsed(void *,void (__cdecl*)(void *,unsigned short const *,int,int));
+	virtual int FCTypes(void);
+	virtual int QueryFileInfo2(unsigned char *,long *);
+	virtual int FSetPfnQueryCallback(void *,int (__cdecl*(__cdecl*)(void *,enum DOVC))(void));
 };
 
 struct DBI_VS9  : public DBI_BASE<DBI_part1> {};
@@ -482,87 +475,87 @@ struct DBI
 };
 
 struct StreamCached {
-public: virtual long StreamCached::QueryCb(void);
-public: virtual int StreamCached::Read(long,void *,long *);
-public: virtual int StreamCached::Write(long,void *,long);
-public: virtual int StreamCached::Replace(void *,long);
-public: virtual int StreamCached::Append(void *,long);
-public: virtual int StreamCached::Delete(void);
-public: virtual int StreamCached::Release(void);
-public: virtual int StreamCached::Read2(long,void *,long);
-public: virtual int StreamCached::Truncate(long);
+	virtual long QueryCb(void);
+	virtual int Read(long,void *,long *);
+	virtual int Write(long,void *,long);
+	virtual int Replace(void *,long);
+	virtual int Append(void *,long);
+	virtual int Delete(void);
+	virtual int Release(void);
+	virtual int Read2(long,void *,long);
+	virtual int Truncate(long);
 };
 
 struct GSI {
-public: virtual unsigned long GSI::QueryInterfaceVersion(void);
-public: virtual unsigned long GSI::QueryImplementationVersion(void);
-public: virtual unsigned char * GSI::NextSym(unsigned char *);
-public: virtual unsigned char * GSI::HashSymW(unsigned short const *,unsigned char *);
-public: virtual unsigned char * GSI2::NearestSym(unsigned short,long,long *);
-public: virtual int GSI::Close(void);
-public: virtual int GSI::getEnumThunk(unsigned short,long,struct EnumThunk * *);
-public: virtual int GSI::QueryTpi(struct TPI * *); // returns 0
-public: virtual int GSI::QueryTpi2(struct TPI * *); // returns 0
-public: virtual unsigned char * GSI2::HashSymW2(unsigned short const *,unsigned char *); // same as GSI2::HashSymW
-public: virtual int GSI::getEnumByAddr(struct EnumSyms * *);
+	virtual unsigned long QueryInterfaceVersion(void);
+	virtual unsigned long QueryImplementationVersion(void);
+	virtual unsigned char * NextSym(unsigned char *);
+	virtual unsigned char * HashSymW(unsigned short const *,unsigned char *);
+	virtual unsigned char * NearestSym(unsigned short,long,long *);
+	virtual int Close(void);
+	virtual int getEnumThunk(unsigned short,long,struct EnumThunk * *);
+	virtual int QueryTpi(struct TPI * *); // returns 0
+	virtual int QueryTpi2(struct TPI * *); // returns 0
+	virtual unsigned char * HashSymW2(unsigned short const *,unsigned char *); // same as HashSymW
+	virtual int getEnumByAddr(struct EnumSyms * *);
 };
 
 struct TPI {
-public: virtual unsigned long TPI::QueryInterfaceVersion(void);
-public: virtual unsigned long TPI::QueryImplementationVersion(void);
-public: virtual int TPI::QueryTi16ForCVRecord(unsigned char *,unsigned short *);
-public: virtual int TPI::QueryCVRecordForTi16(unsigned short,unsigned char *,long *);
-public: virtual int TPI::QueryPbCVRecordForTi16(unsigned short,unsigned char * *);
-public: virtual unsigned short TPI::QueryTi16Min(void);
-public: virtual unsigned short TPI::QueryTi16Mac(void);
-public: virtual long TPI::QueryCb(void);
-public: virtual int TPI::Close(void);
-public: virtual int TPI::Commit(void);
-public: virtual int TPI::QueryTi16ForUDT(char const *,int,unsigned short *);
-public: virtual int TPI::SupportQueryTiForUDT(void);
-public: virtual int TPI::fIs16bitTypePool(void);
-public: virtual int TPI::QueryTiForUDT(char const *,int,unsigned long *);
-public: virtual int TPI2::QueryTiForCVRecord(unsigned char *,unsigned long *);
-public: virtual int TPI2::QueryCVRecordForTi(unsigned long,unsigned char *,long *);
-public: virtual int TPI2::QueryPbCVRecordForTi(unsigned long,unsigned char * *);
-public: virtual unsigned long TPI::QueryTiMin(void);
-public: virtual unsigned long TPI::QueryTiMac(void);
-public: virtual int TPI::AreTypesEqual(unsigned long,unsigned long);
-public: virtual int TPI2::IsTypeServed(unsigned long);
-public: virtual int TPI::QueryTiForUDTW(unsigned short const *,int,unsigned long *);
+	virtual unsigned long QueryInterfaceVersion(void);
+	virtual unsigned long QueryImplementationVersion(void);
+	virtual int QueryTi16ForCVRecord(unsigned char *,unsigned short *);
+	virtual int QueryCVRecordForTi16(unsigned short,unsigned char *,long *);
+	virtual int QueryPbCVRecordForTi16(unsigned short,unsigned char * *);
+	virtual unsigned short QueryTi16Min(void);
+	virtual unsigned short QueryTi16Mac(void);
+	virtual long QueryCb(void);
+	virtual int Close(void);
+	virtual int Commit(void);
+	virtual int QueryTi16ForUDT(char const *,int,unsigned short *);
+	virtual int SupportQueryTiForUDT(void);
+	virtual int fIs16bitTypePool(void);
+	virtual int QueryTiForUDT(char const *,int,unsigned long *);
+	virtual int QueryTiForCVRecord(unsigned char *,unsigned long *);
+	virtual int QueryCVRecordForTi(unsigned long,unsigned char *,long *);
+	virtual int QueryPbCVRecordForTi(unsigned long,unsigned char * *);
+	virtual unsigned long QueryTiMin(void);
+	virtual unsigned long QueryTiMac(void);
+	virtual int AreTypesEqual(unsigned long,unsigned long);
+	virtual int IsTypeServed(unsigned long);
+	virtual int QueryTiForUDTW(unsigned short const *,int,unsigned long *);
 };
 
 
 struct NameMap {
-public: virtual int NameMap::close(void);
-public: virtual int NameMap2::reinitialize(void);
-public: virtual int NameMap2::getNi(char const *,unsigned long *);
-public: virtual int NameMap2::getName(unsigned long,char const * *);
-public: virtual int NameMap2::getEnumNameMap(struct Enum * *);
-public: virtual int NameMap2::contains(char const *,unsigned long *);
-public: virtual int NameMap::commit(void);
-public: virtual int NameMap2::isValidNi(unsigned long);
-public: virtual int NameMap2::getNiW(unsigned short const *,unsigned long *);
-public: virtual int NameMap2::getNameW(unsigned long,unsigned short *,unsigned int *);
-public: virtual int NameMap2::containsW(unsigned short const *,unsigned long *);
-public: virtual int NameMap2::containsUTF8(char const *,unsigned long *);
-public: virtual int NameMap2::getNiUTF8(char const *,unsigned long *);
-public: virtual int NameMap2::getNameA(unsigned long,char const * *);
-public: virtual int NameMap2::getNameW2(unsigned long,unsigned short const * *);
+	virtual int close(void);
+	virtual int reinitialize(void);
+	virtual int getNi(char const *,unsigned long *);
+	virtual int getName(unsigned long,char const * *);
+	virtual int getEnumNameMap(struct Enum * *);
+	virtual int contains(char const *,unsigned long *);
+	virtual int commit(void);
+	virtual int isValidNi(unsigned long);
+	virtual int getNiW(unsigned short const *,unsigned long *);
+	virtual int getNameW(unsigned long,unsigned short *,unsigned int *);
+	virtual int containsW(unsigned short const *,unsigned long *);
+	virtual int containsUTF8(char const *,unsigned long *);
+	virtual int getNiUTF8(char const *,unsigned long *);
+	virtual int getNameA(unsigned long,char const * *);
+	virtual int getNameW2(unsigned long,unsigned short const * *);
 };
 
 struct EnumNameMap {
-public: virtual void EnumNameMap::release(void);
-public: virtual void EnumNameMap::reset(void);
-public: virtual int EnumNameMap::next(void);
-public: virtual void EnumNameMap2::get(char const * *,unsigned long *);
+	virtual void release(void);
+	virtual void reset(void);
+	virtual int next(void);
+	virtual void get(char const * *,unsigned long *);
 };
 
 struct EnumNameMap_Special {
-public: virtual void EnumNameMap_Special::release(void);
-public: virtual void EnumNameMap_Special::reset(void);
-public: virtual int EnumNameMap_Special::next(void);
-public: virtual void EnumNameMap_Special::get(char const * *,unsigned long *);
+	virtual void release(void);
+	virtual void reset(void);
+	virtual int next(void);
+	virtual void get(char const * *,unsigned long *);
 };
 
 } // namespace mspdb

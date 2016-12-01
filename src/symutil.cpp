@@ -14,6 +14,7 @@ extern "C" {
 }
 
 #include <assert.h>
+#include <algorithm>
 
 char dotReplacementChar = '@';
 bool demangleSymbols = true;
@@ -91,7 +92,7 @@ int dsym2c(const BYTE* p, int len, char* cname, int maxclen)
 	if (p < end)
 	{
 		// decompression failed, assume it's containing UTF8 encoded characters
-		cpos = min(maxclen, len);
+		cpos = std::min(maxclen, len);
 		memcpy(cname, beg, cpos);
 	}
 	cname[cpos] = 0;

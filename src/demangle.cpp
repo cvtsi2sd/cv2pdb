@@ -465,10 +465,17 @@ public:
 #ifdef _M_X64
 		cvt80to64(rdata, &r);
 #else
+#ifdef __GNUC__
+		__asm__ __volatile__ ("fstpl %0"
+			: "=m" (r)
+			: "t" (rdata)
+			: "st");
+#else
 		__asm {
 			fld TBYTE PTR rdata;
 			fstp r;
 		}
+#endif
 #endif
 
 		char num[30];
