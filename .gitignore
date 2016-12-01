@@ -1,4 +1,8 @@
 /bin
-/src/cv2pdb_vs12.sdf
-/src/cv2pdb_vs12.v12.suo
+/src/*.*sdf
+/src/*.suo
+/src/*.ncb
+/src/**/*.user
+/test/*.user
 /test/obj
+
